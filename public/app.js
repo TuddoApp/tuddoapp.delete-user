@@ -1,7 +1,6 @@
 document.getElementById('deleteForm').addEventListener('submit', function (event) {
     event.preventDefault();
     const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
     const spinner = document.getElementById('spinner');
     spinner.style.display = 'block';
 
@@ -10,13 +9,12 @@ document.getElementById('deleteForm').addEventListener('submit', function (event
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email }),
     })
         .then(response => response.json())
         .then(data => {
             if (data.message) {
-                alert(data.message);
-                window.location.href = 'index.html';
+                window.location.href = '/confirmation-delete';
             } else {
                 throw new Error('Erro ao solicitar exclusão');
             }

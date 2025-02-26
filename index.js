@@ -2,9 +2,18 @@ const express = require('express');
 const admin = require('firebase-admin');
 const dotenv = require('dotenv');
 const path = require('path');
-const fetch = require('node-fetch');
+const nodemailer = require('nodemailer'); // Para enviar e-mails
 
 dotenv.config();
+
+// TODO: Configurar o email corretamente de preferencia o SMPT
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // Ou outro serviço de e-mail
+    auth: {
+        user: 'SEU_EMAIL@gmail.com', // Substitua pelo seu e-mail
+        pass: 'SUA_SENHA', // Substitua pela sua senha ou senha de app
+    },
+});
 
 const app = express();
 app.use(express.json());
@@ -19,12 +28,16 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
 
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Route for the main page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/confirmation-delete', (req, res) => {
-    res.sendFile(path.join(__dirname, 'page2.html'));
+    res.sendFile(path.join(__dirname, 'confirmation-delete.html'));
 });
 
 app.get('/account-deleted', (req, res) => {
@@ -32,34 +45,30 @@ app.get('/account-deleted', (req, res) => {
 });
 
 app.post('/request-delete', async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).send({ error: 'Email e senha são necessários' });
+    const { email } = req.body;
+    if (!email) {
+        return res.status(400).send({ error: 'Email é necessários' });
     }
 
     try {
-        const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + process.env.FIREBASE_API_KEY, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email,
-                password,
-                returnSecureToken: true
-            })
-        });
+        const user = await admin.auth().getUserByEmail(email);
 
-        const data = await response.json();
+        // TODO: criei uma rota como exemplo /delete-account
+        // Crie um link de exclusão com o token
+        const deletionLink = `https://SEU-SITE.com/confirm-deletion?token=${token}`;
 
-        if (data.error) {
-            throw new Error(data.error.message);
-        }
+        // Envie o e-mail de verificação de preferencia criar um html menos feio 
+        const mailOptions = {
+            from: 'SEU_EMAIL@gmail.com',
+            to: email,
+            subject: 'Confirmação de Exclusão de Conta',
+            text: `Clique no link abaixo para confirmar a exclusão da sua conta:\n\n${deletionLink}`,
+        };
 
-        await admin.auth().deleteUser(data.localId); // Exclui o usuário
-        res.send({ message: 'Conta excluída com sucesso.' });
+        await transporter.sendMail(mailOptions);
+        return res.status(200).json({ success: true, message: 'E-mail de verificação enviado.' });
     } catch (error) {
-        console.error('Error:', error);
+        // TODO: tratamento de erro para getUserByEmail email/usuario que não existe
         if (error.message.includes('EMAIL_NOT_FOUND') || error.message.includes('INVALID_PASSWORD')) {
             res.status(404).send({ error: 'Usuário não encontrado ou senha incorreta' });
         } else {
@@ -67,6 +76,32 @@ app.post('/request-delete', async (req, res) => {
         }
     }
 });
+
+app.get('/delete-account', async (req, res) => {
+    const { token } = req.query;
+
+    if (!token) {
+        return res.status(400).json({ error: 'Token inválido.' });
+    }
+
+    try {
+        // Verifique o token (opcional: você pode adicionar validações adicionais)
+        const email = await admin.auth().verifyIdToken(token);
+
+        // Exclua o usuário do Firebase Authentication
+        const user = await admin.auth().getUserByEmail(email);
+        await admin.auth().deleteUser(user.uid);
+
+        // TODO: implementar exclusão
+        // await admin.firestore().collection('users').doc(user.uid).delete();
+
+        return res.status(200).json({ success: true, message: 'Conta excluída com sucesso.' });
+    } catch (error) {
+        console.error('Erro ao excluir conta:', error);
+        return res.status(500).json({ error: 'Erro ao excluir conta.' });
+    }
+});
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
