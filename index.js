@@ -19,7 +19,17 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/confirmation-delete', (req, res) => {
+    res.sendFile(path.join(__dirname, 'page2.html'));
+});
+
+app.get('/account-deleted', (req, res) => {
+    res.sendFile(path.join(__dirname, 'page3.html'));
+});
 
 app.post('/request-delete', async (req, res) => {
     const { email, password } = req.body;
@@ -60,5 +70,5 @@ app.post('/request-delete', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });
