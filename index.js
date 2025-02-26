@@ -41,7 +41,7 @@ app.get('/confirmation-delete', (req, res) => {
 });
 
 app.get('/account-deleted', (req, res) => {
-    res.sendFile(path.join(__dirname, 'page3.html'));
+    res.sendFile(path.join(__dirname, 'account-deleted.html'));
 });
 
 app.post('/request-delete', async (req, res) => {
