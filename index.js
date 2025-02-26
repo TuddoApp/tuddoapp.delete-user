@@ -2,7 +2,7 @@ const express = require('express');
 const admin = require('firebase-admin');
 const dotenv = require('dotenv');
 const path = require('path');
-const crypto = require('crypto');
+const fetch = require('node-fetch');
 
 dotenv.config();
 
@@ -22,46 +22,38 @@ admin.initializeApp({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/request-delete', async (req, res) => {
-    const { email } = req.body;
-    if (!email) {
-        return res.status(400).send({ error: 'Email is required' });
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).send({ error: 'Email e senha são necessários' });
     }
 
     try {
-        const userRecord = await admin.auth().getUserByEmail(email);
-        const token = crypto.randomBytes(20).toString('hex');
-        const confirmationLink = `http://localhost:3000/confirm-delete?token=${token}&email=${encodeURIComponent(email)}`;
+        const response = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + process.env.FIREBASE_API_KEY, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                password,
+                returnSecureToken: true
+            })
+        });
 
-        console.log(`Confirmation link: ${confirmationLink}`);
+        const data = await response.json();
 
-        res.send({ message: 'Confirmation email sent', link: confirmationLink });
-    } catch (error) {
-        console.error('Error:', error);
-        if (error.code === 'auth/user-not-found') {
-            res.status(404).send({ error: 'User not found' });
-        } else {
-            res.status(500).send({ error: 'Failed to send confirmation email' });
+        if (data.error) {
+            throw new Error(data.error.message);
         }
-    }
-});
 
-app.get('/confirm-delete', async (req, res) => {
-    const { token, email } = req.query;
-
-    if (!token || !email) {
-        return res.status(400).send({ error: 'Token and email are required' });
-    }
-
-    try {
-        const userRecord = await admin.auth().getUserByEmail(email);
-        await admin.auth().deleteUser(userRecord.uid);
-        res.redirect(`/page3.html?email=${encodeURIComponent(email)}`);
+        await admin.auth().deleteUser(data.localId); // Exclui o usuário
+        res.send({ message: 'Conta excluída com sucesso.' });
     } catch (error) {
         console.error('Error:', error);
-        if (error.code === 'auth/user-not-found') {
-            res.status(404).send({ error: 'User not found' });
+        if (error.message.includes('EMAIL_NOT_FOUND') || error.message.includes('INVALID_PASSWORD')) {
+            res.status(404).send({ error: 'Usuário não encontrado ou senha incorreta' });
         } else {
-            res.status(500).send({ error: 'Failed to delete account' });
+            res.status(500).send({ error: 'Falha ao excluir a conta' });
         }
     }
 });

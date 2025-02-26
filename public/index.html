@@ -54,7 +54,8 @@
             display: block;
         }
 
-        input[type="email"] {
+        input[type="email"],
+        input[type="password"] {
             width: 100%;
             padding: 0.75rem;
             background-color: #3a3a3a;
@@ -66,11 +67,11 @@
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        input[type="email"]::placeholder {
+        input::placeholder {
             color: #bbb;
         }
 
-        input[type="email"]:focus {
+        input:focus {
             outline: none;
             border-color: #ff9800;
             box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
@@ -98,6 +99,27 @@
             transform: translateY(0);
         }
 
+        .spinner {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #ff9800;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         p.notice {
             color: #ccc;
             font-size: 0.8rem;
@@ -110,16 +132,19 @@
 
 <body>
     <div class="container">
-        <h1>Tuddin<h1>
-                <h2>Solicitar Exclusão de Conta</h2>
-                <form id="deleteForm">
-                    <label for="email">Email da conta:</label>
-                    <input type="email" id="email" name="email" placeholder="seu.email@exemplo.com" required>
-                    <button type="submit">Solicitar Exclusão</button>
-                </form>
-                <p class="notice">
-                    Ao solicitar a exclusão, todos os seus dados serão permanentemente removidos.
-                </p>
+        <h1>Tuddin</h1>
+        <h2>Solicitar Exclusão de Conta</h2>
+        <form id="deleteForm">
+            <label for="email">Email da conta:</label>
+            <input type="email" id="email" name="email" placeholder="seu.email@exemplo.com" required>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" placeholder="Sua senha" required>
+            <button type="submit">Solicitar Exclusão</button>
+        </form>
+        <div class="spinner" id="spinner"></div>
+        <p class="notice">
+            Ao solicitar a exclusão, todos os seus dados serão permanentemente removidos.
+        </p>
     </div>
     <script src="app.js"></script>
 </body>
