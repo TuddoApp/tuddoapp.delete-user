@@ -14,10 +14,6 @@ Antes de rodar o projeto, você precisa garantir que tenha as seguintes ferramen
 
 Certifique-se de que o **PHP** esteja instalado. Você pode verificar isso com o comando:
 
-bash
-
-CopyEdit
-
 `php -v` 
 
 Caso não tenha o PHP instalado, [clique aqui](https://www.php.net/manual/pt_BR/install.php) para aprender como instalá-lo.
@@ -25,10 +21,6 @@ Caso não tenha o PHP instalado, [clique aqui](https://www.php.net/manual/pt_BR/
 ### 2. Instalar o Composer
 
 O **Composer** é necessário para gerenciar as dependências do projeto. Verifique se o **Composer** está instalado com:
-
-bash
-
-CopyEdit
 
 `composer -v` 
 
@@ -83,10 +75,6 @@ Caso não tenha o Composer instalado, você pode seguir as instruções aqui.
 6.  **Rodar o servidor**
     
     Com o **PHP** e as dependências configuradas, você pode rodar o servidor embutido do PHP (para testes locais):
-    
-    bash
-    
-    CopyEdit
     
     `php -S localhost:8000` 
     
