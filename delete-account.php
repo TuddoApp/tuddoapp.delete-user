@@ -24,8 +24,6 @@ $serviceAccountPath = __DIR__ . '/firebase-service-account.json';
 $factory = (new Factory)->withServiceAccount($serviceAccountPath);
 $auth = $factory->createAuth();
 
-
-
 // Simulate receiving an ID token from the client (e.g., from a POST request)
 $token = $_REQUEST['token'] ?? null;
 
@@ -50,7 +48,7 @@ if ($token) {
     } catch (FirebaseException $e) {
         echo json_encode(['message' => "Firebase Error", 'error' => $e->getMessage()]);
         exit();
-    } catch (\InvalidArgumentException $e) {
+    } catch (InvalidArgumentException $e) {
         echo json_encode(['message' => "Error", 'error' => $e->getMessage()]);
         exit();
     } catch (Exception $e) {

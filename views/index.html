@@ -134,7 +134,7 @@
     <div class="container">
         <h1>Tuddin</h1>
         <h2>Solicitar Exclusão de Conta</h2>
-        <form id="deleteForm">
+        <form action="/request-delete" method="POST">
             <label for="email">Email da conta:</label>
             <input type="email" id="email" name="email" placeholder="seu.email@exemplo.com" required>
             <button type="submit">Solicitar Exclusão</button>
@@ -144,6 +144,7 @@
             Ao solicitar a exclusão, todos os seus dados serão permanentemente removidos.
         </p>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="./app.js"></script>
 </body>
 
