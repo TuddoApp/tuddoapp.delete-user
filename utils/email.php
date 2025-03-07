@@ -13,12 +13,19 @@ function sendEmail(UserRecord $user, $subject, $text): void
     $mail = new PHPMailer(true);
     // Server settings
     $mail->isSMTP(); // Use SMTP
-    $mail->Host = $_ENV['MAIL_HOST']; // SMTP server (e.g., smtp.gmail.com for Gmail)
+    $mail->Host = $_ENV['MAIL_HOST']; // SMTP server
     $mail->SMTPAuth = true; // Enable SMTP authentication
     $mail->Username =  $_ENV['MAIL_USER']; // SMTP username
     $mail->Password =  $_ENV['MAIL_PASS']; // SMTP password
-    // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
-    $mail->Port = 587; // TCP port to connect to
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
+    $mail->Port = intval($_ENV['MAIL_PORT']); // TCP port to connect to
+    $mail->SMTPOptions = array(
+        'ssl' => array(
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true
+        )
+    );
     $mail->CharSet = 'UTF-8';
 
     // Recipients
@@ -34,3 +41,20 @@ function sendEmail(UserRecord $user, $subject, $text): void
     // Send the email
     $mail->send();
 }
+
+function loadEmailTemplate($templateName, $variables = []) {
+    $templatePath = __DIR__ . "/../views/templates/{$templateName}.html";
+    
+    if (!file_exists($templatePath)) {
+        throw new Exception("Template de email não encontrado: {$templateName}");
+    }
+
+    $template = file_get_contents($templatePath);
+
+    // Substitui as variáveis no template
+    foreach ($variables as $key => $value) {
+        $template = str_replace("{{{$key}}}", $value, $template);
+    }
+
+    return $template;
+} 

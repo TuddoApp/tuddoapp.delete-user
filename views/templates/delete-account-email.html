@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiremos Sua Falta! 💔</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #2a2a2a;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: #ff9800;
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        h1 {
+            color: #ff9800;
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #999;
+            font-size: 1rem;
+            font-style: italic;
+        }
+
+        .content {
+            text-align: left;
+            padding: 0 1rem;
+        }
+
+        p {
+            color: #ccc;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .loss-box {
+            background: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid #ff9800;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .loss-box ul {
+            list-style: none;
+            color: #ccc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .loss-box li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .loss-box li::before {
+            content: '❌';
+            position: absolute;
+            left: 0;
+            color: #ff9800;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .action-container {
+            text-align: center;
+            margin: 2.5rem 0 1.5rem;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 0.85rem 2rem;
+            background-color: #ff9800;
+            color: #1a1a1a !important;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.2);
+        }
+
+        .button.delete {
+            background-color: #666;
+            color: white !important;
+        }
+
+        .button.stay {
+            background-color: #ff9800;
+            color: #1a1a1a !important;
+        }
+
+        .notice {
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            padding-top: 1rem;
+            border-top: 1px solid #3a3a3a;
+        }
+
+        .social-banner {
+            margin: 1.5rem auto;
+            padding: 1rem;
+            background-color: rgba(255, 152, 0, 0.05);
+            border: 1px solid rgba(255, 152, 0, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .social-banner p {
+            color: #ccc;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .social-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: transparent;
+            color: #ff9800 !important;
+            font-weight: bold;
+            text-decoration: none;
+            border: 1px solid #ff9800;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .social-button:hover {
+            background-color: rgba(255, 152, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .emoji {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+            display: inline-block;
+            transform: translateY(1px);
+        }
+
+        .testimonial {
+            font-style: italic;
+            color: #999;
+            position: relative;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .testimonial::before,
+        .testimonial::after {
+            content: '"';
+            color: #ff9800;
+            font-size: 2rem;
+            position: absolute;
+            opacity: 0.5;
+        }
+
+        .testimonial::before {
+            top: 0;
+            left: 0;
+        }
+
+        .testimonial::after {
+            bottom: -0.5rem;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Tuddin</h1>
+            <div class="subtitle">Sua jornada com a gente importa ✨</div>
+        </div>
+        <div class="content">
+            <p>Olá Tuddo Lover!</p>
+            <p>💔 Ficamos realmente tristes em saber que você está considerando nos deixar. Como um dos nossos <span class="highlight">primeiros 10.000 membros</span>, você faz parte de algo especial que construímos juntos.</p>
+            
+            <div class="testimonial">
+                "O Tuddin é uma plataforma que mudou o conceito de turismo para mim. Não consigo imaginar voltar atrás agora!"
+                <br>- Nanderia, CEO da Tuddo.
+            </div>
+
+            <div class="loss-box">
+                <p>Ao excluir sua conta, você perderá permanentemente:</p>
+                <ul>
+                    <li>Todo seu histórico e progresso pessoal</li>
+                    <li>Conexões valiosas construídas na plataforma</li>
+                    <li>Conquistas e recordes acumulados</li>
+                    <li>Status de membro pioneiro e benefícios exclusivos</li>
+                </ul>
+            </div>
+
+            <p>Se ainda assim deseja prosseguir, aqui está o link:</p>
+            
+            <div class="button-container">
+                <form action="{{deleteLink}}" method="POST" style="display: inline;">
+                    <button type="submit" class="button">Confirmar Exclusão da Conta</button>
+                </form>
+            </div>
+
+            <p>Não solicitou esta exclusão? Simplesmente ignore este email e continue aproveitando sua jornada conosco! 🌟</p>
+
+            <div class="notice">
+                <p>⚠️ Por segurança, este link expira em 1 hora</p>
+            </div>
+
+            <div class="social-banner">
+                <p>Fique por dentro das novidades!</p>
+                <a href="https://instagram.com/tuddocoin" class="social-button">
+                    Seguir @tuddocoin
+                </a>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Este é um email automático. Por favor, não responda.</p>
+            <p>© 2024 Tuddin - Todos os direitos reservados</p>
+        </div>
+    </div>
+</body>
+</html> 

@@ -39,10 +39,16 @@ $app->post('/request-delete', function (Request $request, Response $response, $a
         if ($uri->getPort() !== null && $uri->getPort() !== 80 && $uri->getPort() !== 443) {
             $baseUrl .= ':' . $uri->getPort();
         }
-        $deleteLink = $baseUrl . $routeParser->urlFor('/delete-account', ['token' => $token]);
+        
+        // Encode token para URL
+        $encodedToken = rtrim(strtr(base64_encode($token), '+/', '-_'), '=');
+        $deleteLink = $baseUrl . $routeParser->urlFor('/delete-account', ['token' => $encodedToken]);
 
         $subject = "Confirmação de Exclusão de Conta";
-        $text = "Click <a href='$deleteLink'>here</a> to confirm deletion.";
+        $emailVariables = [
+            'deleteLink' => $deleteLink
+        ];
+        $text = loadEmailTemplate('delete-account-email', $emailVariables);
 
         sendEmail($user, $subject, $text);
     } catch (FailedToVerifyToken $e) {
