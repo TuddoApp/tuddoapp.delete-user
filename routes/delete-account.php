@@ -6,7 +6,7 @@ use Kreait\Firebase\Exception\Auth\UserNotFound;
 use Kreait\Firebase\Exception\FirebaseException;
 use Psr\Http\Message\ResponseInterface;
 
-$app->post('/delete-account/{token}', function ($request, $response, $args) use ($auth) {
+$app->map(['GET', 'POST'], '/delete-account/{token}', function ($request, $response, $args) use ($auth) {
     $encodedToken = $args['token'] ?? '';
 
     // Here, you'd verify the token (store & check in DB)
